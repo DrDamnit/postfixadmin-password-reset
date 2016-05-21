@@ -48,6 +48,31 @@ class PasswordReset
   <button type="submit" class="btn btn-default">Reset Password</button>
 </form>
 EOF;
+
+		//confirm the nonce is good.
+
+		$sql = "SELECT 
+				    mailbox_username
+				FROM
+				    postfixadmin.password_reset
+				WHERE
+				    nonce= ?
+					AND UNIX_TIMESTAMP() < expiration
+			        AND valid = 'Y'";
+
+		$stmt = $this->db->prepare($sql);
+		$stmt->bind_param('s',$_GET['n']);
+		$stmt->execute();
+
+		if($stmt->num_rows == 0 ) {
+			echo '<div class="alert alert-danger">This link is not valid. If you were trying to reset your password, you must restart the process by going to <a href="/reset/">the password reset page.</a>. Remeber, you must complete this reset in 2 hours or the link will expire!</div>';
+			return false;
+		} else {
+			$stmt->bind_result($username);
+			$stmt->fetch();			
+			$_SESSION['username'] = $username;
+		}
+
 		echo $form;
 	}
 
@@ -65,11 +90,19 @@ EOF;
 	}
 
 	function routeRequest() {
-		if(isset($_POST['realstEmail'])) $this->confirmAuthority();
-		if(isset($_GET['n']))            $this->resetPassword();
+		if(isset($_POST['realstEmail'])) {
 
-		//Do this by default
-		$this->showForm();
+			$this->confirmAuthority();
+
+		} elseif (isset($_GET['n'])) {
+
+			$this->resetPassword()
+
+		} else {
+
+			$this->showForm();
+
+		}
 	}
 
 	function renderResetLink($nonce) {
