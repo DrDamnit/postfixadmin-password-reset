@@ -2,5 +2,5 @@
 
 	include('../config.inc.php');
 	include('../functions.inc.php');
-
-echo "OK";
+	$db = db_connect();
+	var_dump($db);
