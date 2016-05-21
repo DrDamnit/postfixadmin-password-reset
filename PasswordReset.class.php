@@ -44,11 +44,11 @@ class PasswordReset
 <form method="post">
   <div class="form-group">
     <label for="pass1">Password</label>
-    <input type="password" class="form-control" id="pass1" placeholder="Password">
+    <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Password">
   </div>
   <div class="form-group">
     <label for="pass2">Confirm your new password</label>
-    <input type="password" class="form-control" id="pass2" placeholder="Password">
+    <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Password">
   </div>  
   <button type="submit" class="btn btn-default">Reset Password</button>
 </form>
