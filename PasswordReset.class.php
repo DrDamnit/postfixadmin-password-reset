@@ -2,7 +2,8 @@
 
 class PasswordReset
 {
-	var $db = NULL;
+	var $db             = NULL;
+	var $alternateSetup = false;
 
 	function __construct(MySQLi $db) {
 		$this->db = $db;
@@ -31,8 +32,17 @@ class PasswordReset
 		return ($count > 0?true:false);
 	}
 
-	functin checkForRequest() {
-		echo "<pre>"; var_dump($_POST); echo "</pre>";
+	function checkForRequest() {
+		if(!isset($_POST['realstEmail'])) return false;
+
+		if(!$this->alternateIsSetup($_POST['realstEmail'])) {
+			echo '<div class="alert alert-danger">This email does not have an alternate email setup. You cannot reset your password until you hvae setup an alternate email with the administrator. Contact your administrator and give them an alternate email address you can use to reset your passwords.</div>';
+			$this->alternateSetup = false;
+		} else {
+			$this->alternatesetup = true;
+		}
+
+		return $this->alternateSetup;
 	}
 
 	function resetPassword() {
@@ -42,10 +52,10 @@ class PasswordReset
 	function showForm() {
 		$form = <<<EOF
 <h2>Email Password Reset</h2>
-<form method="POST">
+<form method="post">
   <div class="form-group">
     <label for="realstEmail">Enter Your Email Address</label>
-    <input type="email" class="form-control" id="realstEmail" placeholder="Email">
+    <input type="email" class="form-control" name="realstEmail" id="realstEmail" placeholder="Email">
   </div>
   <button type="submit" class="btn btn-default">Reset Password</button>
 </form>
