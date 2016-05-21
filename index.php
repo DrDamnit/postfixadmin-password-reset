@@ -1,8 +1,13 @@
 <?php
 
-    include('../config.inc.php');
-    include('../functions.inc.php');
+    include("../config.inc.php");
+    include("../functions.inc.php");
+    include("PasswordReset.class.php");
+
     $db = db_connect();
+
+    $PR = new PasswordReset($db);
+    echo ($PR->alternateIsSetup('michael@realsmarttech.com')?"YES":"NO")
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -19,6 +24,14 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>        
     </head>
     <body>
         <!--[if lt IE 8]>
@@ -26,9 +39,7 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
-        <pre>
-        <?php var_dump($db); ?>
+        <h2>Email Password Reset</h2>
     </pre>
 
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
