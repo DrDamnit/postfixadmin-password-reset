@@ -63,6 +63,7 @@ EOF;
 		$stmt = $this->db->prepare($sql);
 		$stmt->bind_param('s',$_GET['n']);
 		$stmt->execute();
+		$stmt->store_result();
 		$stmt->bind_result($username);
 		$stmt->fetch();
 
