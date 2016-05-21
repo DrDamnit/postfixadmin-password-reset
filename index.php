@@ -39,11 +39,9 @@
 
         <!-- Add your site or application content here -->
         <?php
-        if(isset($_GET['n'])) {
-            $PR->resetPassword();
-        } else {
-            $PR->showForm();
-        }
+        $PR->checkForRequest();
+        $PR->resetPassword();
+        $PR->showForm();
         ?>
         
     </pre>
