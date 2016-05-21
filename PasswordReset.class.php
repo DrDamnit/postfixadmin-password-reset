@@ -34,7 +34,41 @@ class PasswordReset
 
 	function updatePassword() {
 		$password = pacrypt($_POST['pass1']);
-		echo "<pre>"; var_dump($password); echo "</pre>";
+
+		$sql = "SELECT 
+				    mailbox_username
+				FROM
+				    postfixadmin.password_reset
+				WHERE
+				    nonce= ?
+					AND UNIX_TIMESTAMP() < expiration
+			        AND valid = 'Y'";
+
+		$stmt = $this->db->prepare($sql);
+		$stmt->bind_param('s',$_GET['n']);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->bind_result($username);
+		$stmt->fetch();
+
+		if($stmt->num_rows == 0 ) {
+			echo '<div class="alert alert-danger">This link is not valid. If you were trying to reset your password, you must restart the process by going to <a href="/reset/">the password reset page.</a>. Remeber, you must complete this reset in 2 hours or the link will expire!</div>';
+			return false;
+		}
+				
+		$sql = "UPDATE `postfixadmin`.`mailbox` 
+				SET 
+				    `password` = ?
+				WHERE
+				    `username` = ?";
+
+		$stmt = $this->db->prepare($sql);
+		$stmt->bind_param('ss',$password,$username)
+		if($stmt->execute()) {
+			echo '<div class="alert alert-succss">You have successfully changed your password.</div>';
+		} else {
+			echo '<div class="alert alert-succss">Your password could not be updated. Please call support.</div>';
+		}
 	}
 
 	function resetPassword() {
@@ -101,7 +135,7 @@ EOF;
 		} elseif (isset($_POST['pass1'])) {
 
 			$this->updatePassword();
-			
+
 		} elseif (isset($_GET['n'])) {
 
 			$this->resetPassword();
