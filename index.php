@@ -7,7 +7,6 @@
     $db = db_connect();
 
     $PR = new PasswordReset($db);
-    echo ($PR->alternateIsSetup('michael@realsmarttech.com')?"YES":"NO")
 ?>
 <!doctype html>
 <html class="no-js" lang="">
@@ -39,7 +38,14 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <h2>Email Password Reset</h2>
+        <?php
+        if(isset($_GET['n'])) {
+            $PR->resetPassword();
+        } else {
+            $PR->showForm();
+        }
+        ?>
+        
     </pre>
 
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>

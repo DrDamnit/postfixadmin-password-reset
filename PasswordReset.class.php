@@ -30,4 +30,22 @@ class PasswordReset
 
 		return ($count > 0?true:false);
 	}
+
+	function resetPassword() {
+
+	}
+
+	function showForm() {
+		$form = <<<EOF
+<h2>Email Password Reset</h2>
+<form method="GET">
+  <div class="form-group">
+    <label for="realstEmail">Enter Your Email Address</label>
+    <input type="email" class="form-control" id="realstEmail" placeholder="Email">
+  </div>
+  <button type="submit" class="btn btn-default">Reset Password</button>
+</form>
+EOF;
+		echo $form;
+	}
 }
