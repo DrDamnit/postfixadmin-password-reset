@@ -22,7 +22,7 @@ class PasswordReset
 				WHERE
 				    mailbox_username = ?";
 
-		$stmt = $db->prepare($sql);
+		$stmt = $this->db->prepare($sql);
 		$stmt->bind_param("s",$username);
 		$stmt->execute();
 		$stmt->bind_result($count);
