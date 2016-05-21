@@ -115,7 +115,7 @@ EOF;
 		$dir    = implode("/", $uri);
 		$prefix = ($_SERVER['HTTPS']?"https":"http");
 		$host   = $_SERVER['HTTP_HOST'];
-		$format = "%s://%s/%s/?n=%s";
+		$format = "%s://%s%s/?n=%s";
 		$link   = sprintf($format
 						 ,$prefix
 						 ,$host
