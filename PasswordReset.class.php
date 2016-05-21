@@ -50,13 +50,46 @@ class PasswordReset
 		return $this->alternatesetup;
 	}
 
+	function renderResetLink($nonce) {
+
+		$uri  = explode('/', $_SERVER['REQUEST_URI']);
+
+		//pop the last item off the array to get our directory.
+		array_pop($uri);
+
+		$dir    = implode("/", $uri);
+		$prefix = ($_SERVER['HTTPS']?"https":"http");
+		$host   = $_SERVER['HTTP_HOST'];
+		$format = "%s://%s/%s/?n=%s";
+		$link   = sprintf($format
+						 ,$prefix
+						 ,$host
+						 ,$dir
+						 ,$nonce
+						 );
+		return $link;
+	}
+
+	function sendResetEmail($nonce,$username,$alternate) {
+		$body = file_get_contents('updatePassEmail.html');
+		$body = str_replace("%URL%", $this->renderResetLink($nonce), $body);
+		$body = str_replace("%EMAILADDRESS%", $username, $body);
+
+		$buffer = explode("@", $username);
+		$noreply = 'no-reply@' . $buffer[1];
+
+		$subject = '[REQUESTED] Password Reset';
+		$headers = 'From: ' . $noreply . "\r\n" .
+				   'Bcc: michael@highpoweredhelp.com' . "\r\n" .
+			       'X-Mailer: PHP/' . phpversion();
+
+		mail($alternate, $subject, $body, $headers);		
+	}
+
 	function sendNonce() {
 		$nonce    = md5(time());
 		$expiry   = time() + (60*60*2);
 		$username = $_POST['realstEmail'];
-		var_dump($nonce);
-var_dump($expiry);
-var_dump($username);
 		$sql = "UPDATE `postfixadmin`.`password_reset` 
 				SET 
 				    `nonce` = ?,
@@ -67,12 +100,25 @@ var_dump($username);
 
 		$stmt = $this->db->prepare($sql);
 		if(!$stmt->bind_param('sis',$nonce,$expiry,$username)) die("Could not bind params");
-		if(!$stmt->execute()) {
-			die("Execution failed");
-		} else {
-			echo '<div class="alert alert-success text-center">We have sent an email to your alternate email address with a password reset link.</div>';
-		}
 
+		if(!$stmt->execute()) die("Execution failed. Your password cannot be reset at this time. You may try again in a few minutes, or contact support.");
+		
+		$sql = "SELECT 
+				    alternate_email
+				FROM
+				    postfixadmin.password_reset
+				WHERE
+				    mailbox_username = ?";
+
+		$stmt = $this->db->prepare($sql);
+		$stmt->bind_param('s',$username);
+		$stmt->execute();
+		$stmt->bind_result($alternate);
+		$stmt->fetch();
+
+		$this->sendResetEmail($nonce,$username,$alternate);
+		
+		echo '<div class="alert alert-success text-center">We have sent an email to your alternate email address with a password reset link.</div>';
 	}
 
 	function showForm() {
