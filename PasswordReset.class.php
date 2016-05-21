@@ -63,13 +63,13 @@ EOF;
 		$stmt = $this->db->prepare($sql);
 		$stmt->bind_param('s',$_GET['n']);
 		$stmt->execute();
+		$stmt->bind_result($username);
+		$stmt->fetch();
 
 		if($stmt->num_rows == 0 ) {
 			echo '<div class="alert alert-danger">This link is not valid. If you were trying to reset your password, you must restart the process by going to <a href="/reset/">the password reset page.</a>. Remeber, you must complete this reset in 2 hours or the link will expire!</div>';
 			return false;
 		} else {
-			$stmt->bind_result($username);
-			$stmt->fetch();			
 			$_SESSION['username'] = $username;
 		}
 
