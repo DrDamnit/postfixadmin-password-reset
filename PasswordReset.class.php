@@ -40,10 +40,10 @@ class PasswordReset
 		if(!isset($_POST['realstEmail'])) return false;
 
 		if(!$this->alternateIsSetup($_POST['realstEmail'])) {
-			echo '<div class="alert alert-danger">This email does not have an alternate email setup. You cannot reset your password until you hvae setup an alternate email with the administrator. Contact your administrator and give them an alternate email address you can use to reset your passwords.</div>';
+			echo '<div class="alert alert-danger text-center">This email does not have an alternate email setup. You cannot reset your password until you hvae setup an alternate email with the administrator. Contact your administrator and give them an alternate email address you can use to reset your passwords.</div>';
 			$this->alternateSetup = false;
 		} else {
-			$this->alternatesetup = true;
+			$this->alternateSetup = true;
 		}
 
 		if($this->alternateSetup) $this->sendNonce();
@@ -51,10 +51,12 @@ class PasswordReset
 	}
 
 	function sendNonce() {
-		$nonce    = sha1(microtime());
-		$expiry   = microtime(true) + (60*60*2);
-		$username = $_GET['realstEmail'];
-
+		$nonce    = md5(time());
+		$expiry   = time() + (60*60*2);
+		$username = $_POST['realstEmail'];
+		var_dump($nonce);
+var_dump($expiry);
+var_dump($username);
 		$sql = "UPDATE `postfixadmin`.`password_reset` 
 				SET 
 				    `nonce` = ?,
@@ -64,9 +66,12 @@ class PasswordReset
 				    `mailbox_username` = ?";
 
 		$stmt = $this->db->prepare($sql);
-		$stmt->bind_param('sis',$nonce,$expiry,$username);
-		$stmt->execute();
-		echo "<pre>"; var_dump($stmt); echo "</pre>";
+		if(!$stmt->bind_param('sis',$nonce,$expiry,$username)) die("Could not bind params");
+		if(!$stmt->execute()) {
+			die("Execution failed");
+		} else {
+			echo '<div class="alert alert-success text-center">We have sent an email to your alternate email address with a password reset link.</div>';
+		}
 
 	}
 
