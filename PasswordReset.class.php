@@ -98,13 +98,14 @@ EOF;
 
 			$this->confirmAuthority();
 
+		} elseif (isset($_POST['pass1'])) {
+
+			$this->updatePassword();
+			
 		} elseif (isset($_GET['n'])) {
 
 			$this->resetPassword();
 
-		} elseif (isset($_POST['pass1'])) {
-
-			$this->updatePassword();
 
 		} else {
 
