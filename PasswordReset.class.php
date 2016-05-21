@@ -51,9 +51,8 @@ EOF;
 		echo $form;
 	}
 
-	function checkForRequest() {
-		if(!isset($_POST['realstEmail'])) return false;
 
+	function confirmAuthority() {
 		if(!$this->alternateIsSetup($_POST['realstEmail'])) {
 			echo '<div class="alert alert-danger text-center">This email does not have an alternate email setup. You cannot reset your password until you hvae setup an alternate email with the administrator. Contact your administrator and give them an alternate email address you can use to reset your passwords.</div>';
 			$this->alternateSetup = false;
@@ -62,7 +61,12 @@ EOF;
 		}
 
 		if($this->alternateSetup) $this->sendNonce();
-		return $this->alternatesetup;
+		return $this->alternatesetup;		
+	}
+
+	function routeRequest() {
+		if(isset($_POST['realstEmail'])) $this->confirmAuthority();
+		if(isset($_GET['n']))            $this->resetPassword();
 	}
 
 	function renderResetLink($nonce) {
