@@ -63,7 +63,7 @@ class PasswordReset
 				    `username` = ?";
 
 		$stmt = $this->db->prepare($sql);
-		$stmt->bind_param('ss',$password,$username)
+		$stmt->bind_param('ss',$password,$username);
 		if($stmt->execute()) {
 			echo '<div class="alert alert-succss">You have successfully changed your password.</div>';
 		} else {
