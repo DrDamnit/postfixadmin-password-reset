@@ -96,7 +96,7 @@ EOF;
 
 		} elseif (isset($_GET['n'])) {
 
-			$this->resetPassword()
+			$this->resetPassword();
 
 		} else {
 
