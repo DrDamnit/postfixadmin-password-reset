@@ -67,6 +67,9 @@ EOF;
 	function routeRequest() {
 		if(isset($_POST['realstEmail'])) $this->confirmAuthority();
 		if(isset($_GET['n']))            $this->resetPassword();
+
+		//Do this by default
+		$this->showForm();
 	}
 
 	function renderResetLink($nonce) {
