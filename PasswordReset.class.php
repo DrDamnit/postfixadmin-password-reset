@@ -31,6 +31,10 @@ class PasswordReset
 		return ($count > 0?true:false);
 	}
 
+	functin checkForRequest() {
+		echo "<pre>"; var_dump($_POST); echo "</pre>";
+	}
+
 	function resetPassword() {
 
 	}
@@ -38,7 +42,7 @@ class PasswordReset
 	function showForm() {
 		$form = <<<EOF
 <h2>Email Password Reset</h2>
-<form method="GET">
+<form method="POST">
   <div class="form-group">
     <label for="realstEmail">Enter Your Email Address</label>
     <input type="email" class="form-control" id="realstEmail" placeholder="Email">
