@@ -2,7 +2,7 @@
 
 // Reporting E_NOTICE can be good too (to report uninitialized
 // variables or catch variable name misspellings ...)
-error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 
     include("../config.inc.php");
     include("../functions.inc.php");
