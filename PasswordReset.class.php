@@ -46,6 +46,22 @@ class PasswordReset
 	}
 
 	function resetPassword() {
+		$nonce    = sha1(microtime());
+		$expiry   = microtime(true) + (60*60*2);
+		$username = $_GET['realstEmail'];
+
+		$sql = "UPDATE `postfixadmin`.`password_reset` 
+				SET 
+				    `nonce` = ?,
+				    `expiration` = ?,
+				    `valid` = 'Y'
+				WHERE
+				    `mailbox_username` = ?";
+
+		$stmt = $this->db->prepare($sql);
+		$stmt->bind_param('sis',$nonce,$expiry,$username);
+		$stmt->execute();
+		echo "<pre>"; var_dump($stmt); echo "</pre>";
 
 	}
 
