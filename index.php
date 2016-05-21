@@ -42,11 +42,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <?php
-        $PR->checkForRequest();
-        $PR->resetPassword();
-        $PR->showForm();
-        ?>
+        <?php $PR->routeRequest(); ?>
         
     </pre>
 
