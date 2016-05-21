@@ -102,7 +102,7 @@ EOF;
 
 			$this->resetPassword();
 
-		} elseif ($_POST['pass1']) {
+		} elseif (isset($_POST['pass1'])) {
 
 			$this->updatePassword();
 
