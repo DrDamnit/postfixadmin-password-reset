@@ -32,6 +32,10 @@ class PasswordReset
 		return ($count > 0?true:false);
 	}
 
+	function resetPassword() {
+
+	}
+
 	function checkForRequest() {
 		if(!isset($_POST['realstEmail'])) return false;
 
@@ -42,10 +46,11 @@ class PasswordReset
 			$this->alternatesetup = true;
 		}
 
-		return $this->alternateSetup;
+		if($this->alternateSetup) $this->sendNonce();
+		return $this->alternatesetup;
 	}
 
-	function resetPassword() {
+	function sendNonce() {
 		$nonce    = sha1(microtime());
 		$expiry   = microtime(true) + (60*60*2);
 		$username = $_GET['realstEmail'];
