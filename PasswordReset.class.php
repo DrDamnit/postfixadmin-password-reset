@@ -32,6 +32,11 @@ class PasswordReset
 		return ($count > 0?true:false);
 	}
 
+	function updatePassword() {
+		$password = pacrypt($_POST['pass1']);
+		echo "<pre>"; var_dump($password); echo "</pre>";
+	}
+
 	function resetPassword() {
 		if(!isset($_GET['n'])) return false;
 		$form = <<<EOF
@@ -70,8 +75,6 @@ EOF;
 		if($stmt->num_rows == 0 ) {
 			echo '<div class="alert alert-danger">This link is not valid. If you were trying to reset your password, you must restart the process by going to <a href="/reset/">the password reset page.</a>. Remeber, you must complete this reset in 2 hours or the link will expire!</div>';
 			return false;
-		} else {
-			$_SESSION['username'] = $username;
 		}
 
 		echo $form;
@@ -98,6 +101,10 @@ EOF;
 		} elseif (isset($_GET['n'])) {
 
 			$this->resetPassword();
+
+		} elseif ($_POST['pass1']) {
+
+			$this->updatePassword();
 
 		} else {
 
